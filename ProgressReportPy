@@ -1,0 +1,14 @@
+from gurobipy import* 
+
+#creating a model
+nbatoy = Model("MyNBAToyModel")
+
+#setting the variables!
+x = nbatoy.addVar(vtype = GRB.CONTINUOUS, name = "player")
+a1 = nbatoy.addVar(vtype = GRB.CONTINUOUS, name = "minutes")
+a2 = nbatoy.addVar(vtype = GRB.CONTINUOUS, name = "points")
+
+#setting the objective!
+nbatoy.setObjective(3*x, GRB.MAXIMIIZE)
+
+#adding all the constraints
