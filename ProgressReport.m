@@ -92,8 +92,10 @@ a = sym('alpha')
 
 PLAYERS = [ones(1,282)]
 f = [Salary']/1000000;
-A = -[ PLAYERS' PLAYERS' -MINUTES PTS AST TRB STL BLK FGA FGM FTA FTM TPA TPM PACE/13 -PF ORB DRB -TOV]'
-b = -[ 13; -15; -MP; TPTS; TAST; TTRB; TSTL; TBLK; TFGA; TFGM; TFTA; TFTM; TTPA; TTPM; TPACE; -TPF; TORB; TDRB; -TTOV]
+A = -[ PLAYERS' -PLAYERS' -MINUTES PTS AST TRB STL BLK FGA FGM FTA FTM TPA TPM  ORB DRB ]'
+b = -[13; -15; -311.68; 132.79; 30.2; 56.51; 10.14; 7.59; 105.84; 50.19; 28.13; 21.49; 29.51; 11.14; 13.3; 43.31 ]
+%%b = -[13; -15; -MP; TPTS; TAST; TTRB; TSTL; TBLK; TFGA; TFGM; TFTA; TFTM; TTPA; TTPM; TPACE; -TPF; TORB; TDRB; -TTOV]
+c = -[13;-15;-MP; TPTS; TAST; TTRB; TSTL; TBLK; TFGA; TFGM; TFTA; TFTM; TTPA; TTPM; TPACE; -TPF; TORB; TDRB; -TTOV]
 Aeq = []
 beq = []
 lb = [zeros(1,282)]
@@ -107,7 +109,26 @@ numberofplayerinroster = nnz(X)
 
 k = find(X == 1)
 
-j = find(X>0)
+%j = find(X>0)
+%%
+%trying to seperate the function%
+m = A*X
+m = abs(m)
+n = b - min(m,b)
+% set the value of alpha=100
+% alpha = 100
+% para = 
+% cost = 
+
+
 
 %%b = -[13; -15; -311.68; 132.79; 30.2; 56.51; 10.14; 7.59; 105.84; 50.19; 28.13; 21.49; 29.51; 11.14; TPACE; -26.67; 13.3; 43.31; -17.71
 %%]([Salary']/1000000 + a * min(b(5), SUM(A(5:5,:)*X)))
+
+%% ff = ([Salary']/1000000 - alpha * PTS);
+%% [J,K] = intlinprog(ff,intcon,A,b,Aeq,beq,lb,ub)
+
+%%alpha = 1
+%%ff = ([Salary']/1000000 - alpha * [TPM]')
+%%[X,Z] = intlinprog(ff,intcon,A,b,Aeq,beq,lb,ub)
+%%Z + alpha * TTPM'
