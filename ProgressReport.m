@@ -87,6 +87,8 @@ TTS = data(:,18);
 %% Clear temporary variables
 clearvars data raw;
 
+X = sym('x', [282 1])
+a = sym('alpha')
 
 PLAYERS = [ones(1,282)]
 f = [Salary']/1000000;
@@ -103,3 +105,9 @@ intcon = [1:282]
 
 numberofplayerinroster = nnz(X)
 
+k = find(X == 1)
+
+j = find(X>0)
+
+%%b = -[13; -15; -311.68; 132.79; 30.2; 56.51; 10.14; 7.59; 105.84; 50.19; 28.13; 21.49; 29.51; 11.14; TPACE; -26.67; 13.3; 43.31; -17.71
+%%]([Salary']/1000000 + a * min(b(5), SUM(A(5:5,:)*X)))
