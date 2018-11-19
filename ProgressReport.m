@@ -88,10 +88,10 @@ TTS = data(:,18);
 clearvars data raw;
 
 
-PLAYERS = [ones(1:282)]
+PLAYERS = [ones(1,282)]
 f = [Salary']/1000000;
-A = -[ PLAYERS PLAYERS -MINUTES PTS AST TRB STL BLK FGA FGM FTA FTM TPA TPM PACE/13 -PF ORB DRB -TOV]'
-b = -[ 13; -15; -MP; TPTS; TAST; TTRB; TSTL; TBLK; TFGA; TFGM; TFTA; TFTM; T3PA; T3PM; TPACE; -TPF; TORB; TDRB; -TTOV]
+A = -[ PLAYERS' PLAYERS' -MINUTES PTS AST TRB STL BLK FGA FGM FTA FTM TPA TPM PACE/13 -PF ORB DRB -TOV]'
+b = -[ 13; -15; -MP; TPTS; TAST; TTRB; TSTL; TBLK; TFGA; TFGM; TFTA; TFTM; TTPA; TTPM; TPACE; -TPF; TORB; TDRB; -TTOV]
 Aeq = []
 beq = []
 lb = [zeros(1,282)]
@@ -101,5 +101,5 @@ intcon = [1:282]
 
 [X,Z] = intlinprog(f,intcon,A,b,Aeq,beq,lb,ub)
 
-Y = nnz(X)
+numberofplayerinroster = nnz(X)
 
