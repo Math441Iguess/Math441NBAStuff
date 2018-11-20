@@ -45,9 +45,9 @@ PACE = data(:,18);
 clearvars data raw I;
 
 
-
+alpha = 0.1
 PLAYERS = [ones(282,1); 0]
-Value = [-1]
+Value = [-1*alpha]
 Index = [283]
 SSalary = [Salary]'/1000000
 SSSalary = [SSalary]
@@ -61,9 +61,10 @@ b = -[13; -15; -311.68; 132.79; 30.2; 56.51; 10.14; 7.59; 105.84; 50.19; 28.13; 
 Aeq = [];
 beq = [];
 lb = [zeros(1,283)];
-ub = [ones(1,282) 11.14];
+ub = [ones(1,282) inf];
 intcon = [1:282]
 
+A(17,283) = -1;
 A(18,283) = 1;
 
 f = Result';
@@ -71,5 +72,5 @@ f = Result';
 options = optimoptions('intlinprog', 'Display', 'iter');
 [X,fval,exitflag, output] = intlinprog(f,intcon,A,b,Aeq,beq,lb,ub,options)
 
-k == find(X ==1)
-Y = (fval + 11.14)
+k = find(X ==1)
+Y = (fval + alpha* 11.14)
