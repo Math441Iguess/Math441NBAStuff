@@ -65,8 +65,8 @@ data = reshape([raw{:}],size(raw));
 
 %% Allocate imported array to column variable names
 TEAMMIN = data(:,1);
-TEAMFGA = data(:,2);
-TEAMFGM = data(:,3);
+TEAMFGM = data(:,2);
+TEAMFGA = data(:,3);
 TEAMTPM = data(:,4);
 TEAMTPA = data(:,5);
 TEAMFTM = data(:,6);
@@ -132,6 +132,7 @@ INDMIN = [MINUTES' 0];
 INDTOV = [TOV' 0];
 INDTS = [TS' 0];
 
+
 % After transposing everything, and adding the addition variable, we will
 % now include all the row matrixes together, to form our Constraint Matrix,
 % A.
@@ -173,14 +174,14 @@ NEWVARREQ1 = [zeros(1,282) 1];
 NEWVARREQ2 = [-TPM' 1];
 
 A = [-PLAYER; PLAYER; -INDMIN; -INDPTS; -INDAST; -INDORB; -INDDRB; -INDTRB; -INDSTL;
-    -INDBLK; -INDTOV; INDPF; -INDFGM; -INDFGA; -INDTPM; -INDTPA; -INDFTM; -INDFTA;
+    -INDBLK; -INDTOV; INDPF; -INDFGM; -INDFGA; -INDTPA; -INDFTM; -INDFTA;
     NEWVARREQ1; NEWVARREQ2];
 
 % This also means, we would need to update our vector b as well. 
 
 b = [-MINROSTER; MAXROSTER; -TEAMMIN; -TEAMPTS; -TEAMAST; -TEAMORB; -TEAMDRB;
     -TEAMTRB; -TEAMSTL; -TEAMBLK; -TEAMTOV; TEAMPF; -TEAMFGM; -TEAMFGA;
-    -TEAMTPM; -TEAMTPA; -TEAMFTM; -TEAMFTA; TEAMTPM; 0]; 
+     -TEAMTPA; -TEAMFTM; -TEAMFTA; TEAMTPM; 0]; 
 
 % Now, we will put all the pieces together first, and see whether the
 % program will run or not. 
