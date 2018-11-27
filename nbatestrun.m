@@ -148,16 +148,6 @@ RESETCOMP(cellfun(@(x) ~isempty(x) && isnumeric(x) && isnan(x),RESETCOMP)) = {''
 
 
 
-% from gurobi import *
-
-% nbaTESTING = Model('NBATeamBuilder');
-
-% numVars = 283;
-% 
-% n = size(model.A,2);
-% 
-% x = numVars;
-
 PLAYER = [ones(1,282) 0];
 
 
@@ -219,8 +209,8 @@ NEWVARREQ2 = [-TPM' 1];
 
 names = [RESETCOMP; 'y'];
 
-
 alpha = 1;
+% alpha = 1;
 
 model.obj = [[Salary']/1000000 -alpha]
 
@@ -237,6 +227,14 @@ model.vtype = 'B';
 model.modelsense = 'min';
 model.varnames = names;
 
+% for i = 1:(length(names)-1)
+%     model.vtype='B';
+% end
+% 
+% for i = 283
+%     model.vtype= 'C';
+% end
+
 gurobi_write(model, 'nbatestrun.lp');
 
 params.outputflag = 0;
@@ -250,9 +248,12 @@ disp(result);
   for v=1:length(names)
       if (result.x(v) == 1)
       fprintf('%s %d \n', string(names(v)),result.x(v));
-  end
+      end
   
-
+%   scatter(alpha, objval)
+%   hold on;
+  
+  end
 %  fprintf('Obj: %d', result.objval);
 %  sprintf('obj: %s %s', string(names(v)));
 
