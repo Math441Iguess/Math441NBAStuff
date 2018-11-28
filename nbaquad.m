@@ -1,4 +1,4 @@
-function nba()
+function nbaquad()
 
 %% Import the data
 
@@ -202,27 +202,32 @@ lb = [zeros(1,283)];
 
 ub = [ones(1,282) inf];
 
-
 NEWVARREQ1 = [zeros(1,282) 1];
 
 NEWVARREQ2 = [-TPM' 1];
 
 names = [RESETCOMP; 'y'];
 
-%    for alpha = [1:0.1:16];
-       alpha = 0.01 ;
+%      for alpha = [0:0.1:16];
+   alpha = 5;
 
-model.obj = [[Salary']/1000000 -alpha]
+
+H = zeros(283,283);
+H(283,283) = alpha;
+
+model.obj = [[Salary']/1000000 (-2 * TEAMTPM * alpha)]
 
 SSALARY = [[Salary]'/1000000 0]
 
+model.Q = sparse(H);
+
 model.A = sparse([-PLAYER; PLAYER; -INDMIN; -INDPTS; -INDAST; -INDORB; -INDDRB; -INDTRB; -INDSTL;
--INDBLK; INDTOV; INDPF; -INDFGM; -INDFGA; -INDTPA; -INDFTM; -INDFTA;
-NEWVARREQ1; NEWVARREQ2]);
+-INDBLK; INDTOV; INDPF; -INDFGM; -INDFGA; INDTPA; -INDFTM; -INDFTA;
+NEWVARREQ1; NEWVARREQ2; -SSALARY]);
 
 model.rhs =[-MINROSTER; MAXROSTER; -TEAMMIN; -TEAMPTS; -TEAMAST; -TEAMORB; -TEAMDRB;
 -TEAMTRB; -TEAMSTL; -TEAMBLK; TEAMTOV; TEAMPF; -TEAMFGM; -TEAMFGA;
--TEAMTPA; -TEAMFTM; -TEAMFTA; TEAMTPM; 0];
+TEAMTPA; -TEAMFTM; -TEAMFTA; TEAMTPM; 0; -90];
 
 model.sense = '<';
 model.vtype = 'I';
@@ -232,46 +237,52 @@ model.lb = lb;
 model.ub = ub;
 
 
-gurobi_write(model, 'nbatestrun.lp');
+
+gurobi_write(model, 'nbatestrunquad.lp');
 
 params.outputflag = 0;
 
 result = gurobi(model,params);
 
-
+disp('for alpha = 5');
 
 disp(result);
 
-for v=1:length(names)
+  for v=1:length(names)
       if (result.x(v) == 1)
-      fprintf('%s %d \n', string(names(v)),result.x(v));
+      fprintf('%s %f \n', string(names(v)),result.x(v));
       end
-end
+  end
+ 
+disp('    '); 
   
-disp('     ');
-
-disp('The optimal solution is:');
-disp(result.objval+ alpha * result.x(283));
-
-
+disp('this is the objective value after adding alpha!');
+disp(result.objval + (alpha * result.x(283)^2));
+     
+ 
 disp('this is what the dummy variable y has!');
 disp(result.x(283));
 
 disp('this is the total penalty cost!');
-disp(result.x(283) * alpha);
+disp(result.x(283)^2 * alpha);
 
 disp('this is before adding alpha!');
 disp(result.objval);
-
-disp('this is the objective value after adding alpha!');
-disp(result.objval+ alpha * result.x(283));
-
-
-  
-      
-   scatter(alpha, (result.objval+ alpha * result.x(283)));
+ 
+%   for alpha = 1:0.1:10
+   scatter(alpha, (result.objval + (alpha * result.x(283)^2)));
    hold on
       
+%    for v=1:length(names)
+%        if (result.x(v) > 0)
+%        fprintf('%s %d \n', string(names(v)),result.x(v));
+%        end
+  
+%    plot(length(names),alpha)
+%    hold on;
+  
+% fprintf('Obj: %e\n', result.objval);
+
   end
 
-%  end
+%   end
