@@ -1,0 +1,167 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+
+\title{Creating a Championship Winning NBA Team}
+\author{}
+\date{November 2018}
+
+
+\begin{document}
+
+
+\maketitle
+
+
+\section{\centering Introduction}
+
+
+
+\textbf{1.1 Overview}
+\\
+
+The goal of this article is to find a potential NBA championship winning team while save as much cost as possible. The team is filled with thirteen to fifteen players, and they must combine to produce statistics higher than the previous champions while minimizing the cost of such team. We also study how the effect of allowing and changing the penalty cost value would do to the combination of the team and its corresponding cost.\\
+\newline
+\textbf{1.2	Motivation }
+\\
+
+Since sports is becoming a multi-million-dollar industry, there are competitions everywhere. In order to stay in the business, we must be find a way to minimize our cost, and thus have greater profit. Our primary interest is to minimize our cost in the NBA industry. We, as sports managers, want to save as much spending as possible while having the ability to achieve our long-term goal, which is to win the champion. \\
+\newline
+\textbf{1.3	Specific Questions in this Line of Research} \\
+
+\begin{itemize}
+\item  How is the total cost and the combination of the players affected by the change in the penalty cost parameter? 
+\item If we allow, for example, the "3 points shots made" (3PM) constraint to be below the threshold of the requirement, what would happen to the combination of the players? And how sensitive is the change? 
+\item What happens when we take the square of the penalty cost function? And what does the result mean? 
+\end{itemize}
+\\
+
+\break
+\textbf{1.4 Assumption}\\
+
+Before we go into the details of the models, there are some assumptions we have to make for our models to be realistic. 
+
+\begin{enumerate}
+\item  We ignore the factor of the five basketball positions normally employed by organized basketball teams. In other words, there is no difference between the five positions. Therefore, there could be a team of 13 shooting guards. 
+\item  We assume the team is realistic, for example, there will not contain thirteen rookies
+\item We have a minimum of 90 million dollar expenditure
+\end{enumerate}\\
+
+\newline 
+\section{\centering MODELS }\\
+\subsection{Basic Model}\\
+
+
+The simplest model of creating a NBA team is formulated as an Integer Linear Program (ILP), or more precise a type of bin packing model. The basic setup is that we have n total players and m possible required constraints for setting up the team. Each player has his own skill-set, as well as individual salary.  Here, player i’s j skill-set is given as$a_{ji}$ The corresponding requirement is given as $b_j$ We introduce a decision variable as player i, and it is denoted by $x_i$ This is also a binary variable, given as
+  \[
+    x_i=\left\{
+                \begin{array}{ll}
+                  1, \mbox{if player is chosen}  \\
+                  0, else
+                \end{array}
+              \right.
+  \]
+A constraint is implemented on how many players we can have on a team. The roster size needs to be between thirteen to fifteen. This is shown as below: 
+$$ 13 \leq \sum_{i=1}^{n}x_i \leq 15$$
+Multiplying the players with their respective annual salaries, in million dollars, the objective function would be: 
+$$\sum_{i=1}^{n} c_i  x_i$$
+where the respective players' annual salaries is given as $c_i$  
+We are implementing a penalty cost parameter, denoted by $$\alpha = \{\alpha \in \mathbb{R}, \alpha > 0\}$$The unit for this parameter would be in millions of dollars. It enables the integer linear program (ILP) to accept a set of players that does not meet the certain constraint requirement. The difference between the constraint requirement and the sum of the chosen players’ statistics equals the units penalized. This difference is given as
+$$ \alpha \space
+(b_k \space - min (b_k, a_{k1}x_1 + a_{k2}x_2 + a_{k3}x_3 + ...+ a_{{k(n-1)}}x_{n-1} + a_{kn}x_n)) $$where $$0< k < m$$ \\We are introducing a dummy variable \text{y}, such that 
+$$y = min (b_k, a_{k1}x_1 + a_{k2}x_2 + a_{k3}x_3 + ...+ a_{{k(n-1)}}x_{n-1} + a_{kn}x_n )$$Then the difference becomes
+$$ b_k - y$$As a result, our new penalty function becomes
+$$\alpha(b_k - y)$$ Since we want to minimize the cost, the object function will now become 
+
+$$min \sum_{i=1}^ {n} \space c_i x_i \space + \alpha \space 
+(b_k \space - y)$$
+Also, all the constraints are written in the form of 
+
+$$ \sum_{i=1}^{n} a_{ji}x_i \geq b_j$$\\
+
+
+For example, 
+
+$$a_{11} x_1 + a_{12}x_2 + ... + a_{1(n-1)}x_{n-1} + a_{1n}x_n > b_1$$
+$$a_{21} x_1 + a_{22}x_2 + ... + a_{2(n-1)}x_{n-1} + a_{2n}x_n > b_2$$
+$$\vdots $$
+$$a_{j1} x_1 + a_{j2}x_2 + ... + a_{j(n-1)}x_{n-1} + a_{jn}x_n > b_j$$
+$$\vdots $$
+$$a_{(m-1)1} x_1 + a_{(m-1)2}x_2 + ... + a_{(m-1)(n-1)}x_{n-1} + a_{(m-1)n}x_n > b_{m-1}$$
+$$a_{m1} x_1 + a_{m2}x_2 + ... + a_{m(n-1)}x_{n-1} + a_{mn}x_n > b_m$$\\
+
+
+ 
+\subsection{Advanced Model}
+Our advanced model revolves around the same concept. By squaring the difference between the constraint selected and the standard, we achieve a more realistic model:
+\begin{equation}\label{eq_for_quard_penalty}
+(b_k - y)^2
+\end{equation} \\
+The objective function would then be:
+\begin{equation}\label{eq_for_simple_model_objective_function}
+min \text{ } (\sum^{n}_{i=1}{c_i \cdot x_i}  + \alpha(b_k 
+- y)^2)\end{equation}
+In this case, we can no longer describe the program as a ILP. It is now a 
+quadratic program that also utilizes integer and linear programming.
+\subsection{Complex Model}
+In this model, instead of having only one parameter, $\alpha$, we 
+implement 2 more parameters. We denote them as $\alpha_1, \alpha_2: \{\alpha_1, 
+\alpha \in \mathbb{R}{> 0}\}$. The implementation of the two new 
+parameters makes the model more difficult to graph, and it changes the set 
+of selected players.
+The objective function would then be 
+$$min (\sum_{i=1}^ {n} \space c_i x_i \space + \alpha_0 \space 
+(b_k \space - y)^2+ \alpha_1 \space (b_{k+1} \space - y)^2 
++\alpha_2 \space 
+(b_{k-1} \space - y)^2) $$
+
+
+
+
+
+
+\section{\centering DATA}
+We have gathered information through a few different websites. First off, 
+we have used http://www.nba.com to include statistics of the individual 
+players, and imported the data into our own Excel sheet. Then, we filtered 
+out players that have played less than 41 games, and those who average 
+less than 9 minutes per game. Also, the statistics used are from 2017-2018 
+season. \\
+We also gathered data on the players' salaries, as well as the previous 
+championship team statistics, through https://www.basketball-
+reference.com. Here, we imported the teams' data into Excel spreadsheet 
+table. For testing if our models work, we generated a simple data consist of 20 players and 5 constraints. The reason we lowered our n and m this low is because we then can check for sure the reuslts are right, and therefore, our models work. 
+
+\section{\centering ALGORTHMS}
+We are using MATLAB libraries for ILP, as well as quadratic programming. 
+This program allows us to write down our objective function as a $1 \times 
+n$ vector, while all the constraints will be placed together, to form a $m 
+\times n$ matrix denoted by A. Also, the constants will be denoted as a $m 
+\times 1$ vector. There is a lower bound of zero, denoted as lb within 
+MATLAB. There are no upper bound, as the decision variable is limited to 
+selected 0 or 1.
+
+\section{\centering CURRENT RESULTS} (i didnt writ much here)
+\subsection{Basic Model}
+As the below data shown, results are different for when $\alpha$ is 1, 5, 0, 0.01, 0.01, with the corresponding cost of 90.0071, 90.0006, 90.0062, 90.0045, and 90.0071. 
+\subsection{Advance Model }
+As the below data shown, results are different for when $\alpha$ is 0.01, 0.1, 0, 5, with the corresponding cost of 77.5938, -34.0779, 88.7665, 90, and -530.3959. 
+
+
+\section{\centering OBSTACLES ENCOUNTERED }
+dont think we need to do this...
+
+
+\section{\centering QUESTIONS FOR FUTURE RESEARCH }
+\begin{itemize}
+\item While we set our parameter mainly on 3PM for this project, we also discussed the possibility of setting parameter on other constraints such as TOV(which may lead to a different objective function) and possible outcomes. 
+\item We will also target on solving the assumptions we mentioned above, so the future models will be even more realistic.
+
+\end{itemize}
+
+
+
+
+
+
+\end{document}
